@@ -1,0 +1,124 @@
+<html>
+
+<head>
+    <div th:include="template :: head"></div>
+    <title th:text="${accion}"></title>
+</head>
+
+<body>
+    <header th:replace="template :: header"></header>
+
+    <!--Buscar autor-->
+	<section th:if="${#strings.contains(accion,'Autor')}" class="p-5">
+		<form th:action="@{/autor/modificar}" method="POST">
+			<div class="d-sm-flex align-items-center justify-content-center">
+				<div class="rounded bg-gradient shadow" style="background-color: rgb(255, 207, 49);">
+					<div class="px-5 pt-5">
+						<h1 class="display-5 font-weight-bold text-center">Busqueda de autor</h1>
+					</div>
+					<div class="mx-5 my-5">
+						<div class="form-floating my-4">
+							<input type="text" class="form-control shadow" placeholder=" " name="nombre" required>
+							<label>Nombre</label>
+						</div>
+						<div class="form-floating my-4">
+							<input type="text" class="form-control shadow" placeholder=" " name="apellido" required>
+							<label>Apellido</label>
+						</div>
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn-lg btn-primary bg-gradient shadow">Buscar</button>
+						</div>
+						<div class="d-grid gap-2 pt-3">
+							<a href="javascript: history.go(-1)" class="btn btn-lg btn-outline-primary bg-gradient shadow">Volver</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+    <!--Buscar editorial-->
+    <section th:if="${#strings.contains(accion,'Editorial')}" class="p-5">
+		<form th:action="@{/editorial/modificar}" method="POST">
+			<div class="d-sm-flex align-items-center justify-content-center">
+				<div class="rounded bg-gradient shadow" style="background-color: rgb(255, 207, 49);">
+					<div class="px-5 pt-5">
+						<h1 class="display-5 font-weight-bold text-center">Busqueda de editorial</h1>
+					</div>
+					<div class="mx-5 my-5">
+						<div class="form-floating my-4">
+							<input type="text" class="form-control shadow" placeholder=" " name="nombre" required>
+							<label>Nombre</label>
+						</div>
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn-lg btn-primary bg-gradient shadow">Buscar</button>
+						</div>
+						<div class="d-grid gap-2 pt-3">
+							<a href="javascript: history.go(-1)" class="btn btn-lg btn-outline-primary bg-gradient shadow">Volver</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+    <!--Buscar libro-->
+    <section th:if="${#strings.contains(accion,'Libro')}" class="p-5">
+		<form th:action="@{/libro/modificar}" method="POST">
+			<div class="d-sm-flex align-items-center justify-content-center">
+				<div class="rounded bg-gradient shadow" style="background-color: rgb(255, 207, 49);">
+					<div class="px-5 pt-5">
+						<h1 class="display-5 font-weight-bold text-center">Modificar libro</h1>
+					</div>
+					<div class="mx-5 my-5">
+						<div class="form-floating my-4">
+							<input type="text" class="form-control" placeholder="Titulo del libro" name="titulo" required>
+							<label>Ingresar titulo</label>
+						</div>
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn-lg btn-primary bg-gradient shadow">Buscar</button>
+						</div>
+						<div class="d-grid gap-2 pt-3">
+							<a href="javascript: history.go(-1)" class="btn btn-lg btn-outline-primary bg-gradient shadow">Volver</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+    <!--Buscar cliente-->
+    <section th:if="${#strings.contains(accion,'Cliente')}" class="p-5">
+		<form th:action="@{/cliente/modificar}" method="POST">
+			<div class="d-sm-flex align-items-center justify-content-center">
+				<div class="rounded bg-gradient shadow" style="background-color: rgb(255, 207, 49);">
+					<div class="px-5 pt-5">
+						<h1 class="display-5 font-weight-bold text-center">Busqueda de cliente</h1>
+					</div>
+					<div class="mx-5 my-5">
+						<div class="form-floating my-4">
+							<input type="number" class="form-control shadow" placeholder=" " name="dni" required>
+							<label>DNI</label>
+						</div>
+						<!-- <div class="form-floating my-4">
+							<input type="text" class="form-control shadow" placeholder=" " name="nombre" required>
+							<label>Nombre</label>
+						</div>
+						<div class="form-floating my-4">
+							<input type="text" class="form-control shadow" placeholder=" " name="apellido" required>
+							<label>Apellido</label>
+						</div> -->
+						<div class="d-grid gap-2">
+							<button type="submit" class="btn-lg btn-primary bg-gradient shadow">Buscar</button>
+						</div>
+						<div class="d-grid gap-2 pt-3">
+							<a href="javascript: history.go(-1)" class="btn btn-lg btn-outline-primary bg-gradient shadow">Volver</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+
+    <footer th:replace="template :: footer"></footer>
+    <div th:replace="template :: scripts"></div>
+</body>
+
+</html>

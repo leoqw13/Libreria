@@ -1,0 +1,203 @@
+<html>
+
+<head>
+    <div th:include="template :: head"></div>
+    <title th:text="${accion}"></title>
+</head>
+
+<body>
+    <header th:replace="template :: header"></header>
+
+    <div class="container my-5">
+        <div th:replace="template :: search"></div>
+    </div>
+
+    <!--Listado de Autores-->
+    <div th:if="${#strings.contains(accion,'Autor')}" class="container my-5">
+        <div class="table-responsive-xxl">
+            <table id="ordenarTabla" class="table table-borderless table-hover border-dark shadow text-center lead">
+                <thead>
+                    <tr class="btn-primary bg-gradient shadow-lg">
+                        <th scope="col" onclick="sortTable(0)">ID</th>
+                        <th scope="col" onclick="sortTable(1)">Nombre</th>
+                        <th scope="col" onclick="sortTable(2)">Apellido</th>
+                        <th scope="col" onclick="sortTable(3)">Activo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable" th:each="autor : ${autores}">
+                    <tr class="bg-gradient shadow-lg" style="background-color: rgb(255, 207, 49);">
+                        <td th:text="${autor.id}"></td>
+                        <td th:text="${#strings.arraySplit(autor.nombre,' ')[0]}"></td>
+                        <td th:text="${#strings.arraySplit(autor.nombre,' ')[1]}"></td>
+                        <td>
+                            <i class="bi  bg-gradient" th:classappend="${autor.alta}? 'bi-check-lg btn btn-success':'bi-x-lg btn btn-danger disabled'" style="font-size: 1.5rem;"></i>
+                        </td>
+                        <td>
+                            <a th:href="@{/autor/}+${autor.alta?'baja':'alta'}+@{/__${autor.id}__}" th:title="!${autor.alta}?'Dar de alta':'Dar de baja'" class="btn bg-gradient" th:classappend="!${autor.alta}? 'bi-check-lg btn btn-outline-success':'bi-x-lg btn btn-outline-danger'" style="font-size: 1.5rem;"></a>
+                            <a th:href="@{/autor/modificar/__${autor.id}__}" title="Modificar" class="btn btn-outline-primary bg-gradient">
+                                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--Listado de Editoriales-->
+    <div th:if="${#strings.contains(accion,'Editorial')}" class="container my-5">
+        <div class="table-responsive-xxl">
+            <table id="ordenarTabla" class="table table-borderless table-hover border-dark shadow text-center lead">
+                <thead>
+                    <tr class="btn-primary bg-gradient shadow-lg">
+                        <th scope="col" onclick="sortTable(0)">ID</th>
+                        <th scope="col" onclick="sortTable(1)">Nombre</th>
+                        <th scope="col" onclick="sortTable(2)">Activo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable" th:each="editorial : ${editoriales}">
+                    <tr class="bg-gradient shadow-lg" style="background-color: rgb(255, 207, 49);">
+                        <td th:text=${editorial.id}></td>
+                        <td th:text="${editorial.nombre}"></td>
+                        <td>
+                            <i class="bi  bg-gradient" th:classappend="${editorial.alta}? 'bi-check-lg btn btn-success':'bi-x-lg btn btn-danger disabled'" style="font-size: 1.5rem;"></i>
+                        </td>
+                        <td>
+                            <a th:href="@{/editorial/}+${editorial.alta?'baja':'alta'}+@{/__${editorial.id}__}" th:title="!${editorial.alta}?'Dar de alta':'Dar de baja'" class="btn bg-gradient" th:classappend="!${editorial.alta}? 'bi-check-lg btn btn-outline-success':'bi-x-lg btn btn-outline-danger'" style="font-size: 1.5rem;"></a>
+                            <a th:href="@{/editorial/modificar/__${editorial.id}__}" title="Modificar" class="btn btn-outline-primary bg-gradient">
+                                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--Listado de Libros-->
+    <div th:if="${#strings.contains(accion,'Libro')}" class="container my-5">
+        <div class="table-responsive-xxl">
+            <table id="ordenarTabla" class="table table-sm table-borderless table-hover border-dark shadow text-center lead">
+                <thead>
+                    <tr class="btn-primary bg-gradient shadow-lg">
+                        <!--th scope="col">ID</th-->
+                        <th scope="col" onclick="sortTable(0)">ISBN</th>
+                        <th scope="col" onclick="sortTable(1)">Titulo</th>
+                        <th scope="col" onclick="sortTable(2)">Año</th>
+                        <th scope="col" onclick="sortTable(3)">Autor</th>
+                        <th scope="col" onclick="sortTable(4)">Editorial</th>
+                        <th scope="col" onclick="sortTable(5)">Ejemplares</th>
+                        <th scope="col" onclick="sortTable(6)">Prestados</th>
+                        <th scope="col" onclick="sortTable(7)">Restantes</th>
+                        <th scope="col" onclick="sortTable(8)">Activo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable" th:each="libro : ${libros}">
+                    <tr class="bg-gradient shadow-lg" style="background-color: rgb(255, 207, 49);">
+                        <!--th scope="row" th:text=${libro.id}></th-->
+                        <td th:text="${libro.isbn}"></td>
+                        <td th:text="${libro.titulo}"></td>
+                        <td th:text="${libro.anio}"></td>
+                        <td th:text="${libro.autor.nombre}"></td>
+                        <td th:text="${libro.editorial.nombre}"></td>
+                        <td th:text="${libro.ejemplares}"></td>
+                        <td th:text="${libro.ejemplaresPrestados}"></td>
+                        <td th:text="${libro.ejemplaresRestantes}"></td>
+
+                        <td>
+                            <i class="bi  bg-gradient" th:classappend="${libro.alta}? 'bi-check-lg btn btn-success':'bi-x-lg btn btn-danger disabled'" style="font-size: 1.5rem;"></i>
+                        </td>
+                        <td>
+                            <!--"@{/login} + '/'+ ${businessId}"...@{/order/{id}/detail/{detail}(id=${anIdExpression}, detail=${aDetailExpression)}-->
+                            <a th:href="@{/libro/}+${libro.alta?'baja':'alta'}+@{/__${libro.id}__}" th:title="!${libro.alta}?'Dar de alta':'Dar de baja'" class="btn bg-gradient" th:classappend="!${libro.alta}? 'bi-check-lg btn btn-outline-success':'bi-x-lg btn btn-outline-danger'" style="font-size: 1.5rem;"></a>
+                            <a th:href="@{/libro/modificar/__${libro.id}__}" title="Modificar" class="btn btn-outline-primary bg-gradient">
+                                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--Listado de Clientes-->
+    <div th:if="${#strings.contains(accion,'Cliente')}" class="container my-5">
+        <div class="table-responsive-xxl">
+            <table id="ordenarTabla" class="table table-borderless table-hover border-dark shadow text-center lead">
+                <thead>
+                    <tr class="btn-primary bg-gradient shadow-lg">
+                        <th scope="col" onclick="sortTable(0)">DNI</th>
+                        <th scope="col" onclick="sortTable(1)">Nombre</th>
+                        <th scope="col" onclick="sortTable(2)">Apellido</th>
+                        <th scope="col" onclick="sortTable(3)">Teléfono</th>
+                        <th scope="col" onclick="sortTable(4)">Activo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable" th:each="cliente : ${clientes}">
+                    <tr class="bg-gradient shadow-lg" style="background-color: rgb(255, 207, 49);">
+                        <td th:text=${cliente.documento}></td>
+                        <td th:text="${cliente.nombre}"></td>
+                        <td th:text="${cliente.apellido}"></td>
+                        <td th:text="${cliente.telefono}"></td>
+                        <td>
+                            <i class="bi  bg-gradient" th:classappend="${cliente.alta}? 'bi-check-lg btn btn-success':'bi-x-lg btn btn-danger disabled'" style="font-size: 1.5rem;"></i>
+                        </td>
+                        <td>
+                            <a th:href="@{/cliente/}+${cliente.alta?'baja':'alta'}+@{/__${cliente.id}__}" th:title="!${cliente.alta}?'Dar de alta':'Dar de baja'" class="btn bg-gradient" th:classappend="!${cliente.alta}? 'bi-check-lg btn btn-outline-success':'bi-x-lg btn btn-outline-danger'" style="font-size: 1.5rem;"></a>
+                            <a th:href="@{/cliente/modificar/__${cliente.id}__}" title="Modificar" class="btn btn-outline-primary bg-gradient">
+                                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--Listado de Prestamos-->
+    <div th:if="${#strings.contains(accion,'Préstamo')}" class="container my-5">
+        <div class="table-responsive-xxl">
+            <table id="ordenarTabla" class="table table-sm table-borderless table-hover border-dark shadow text-center lead">
+                <thead>
+                    <tr class="btn-primary bg-gradient shadow-lg">
+                        <!--th scope="col">ID</th-->
+                        <th scope="col" onclick="sortTable(0)">ID</th>
+                        <th scope="col" onclick="sortTable(1)">Libro</th>
+                        <th scope="col" onclick="sortTable(2)">Cliente</th>
+                        <th scope="col" onclick="sortTable(3)">DNI</th>
+                        <th scope="col" onclick="sortTable(4)">Préstamo</th>
+                        <th scope="col" onclick="sortTable(5)">Devolución</th>
+                        <th scope="col" onclick="sortTable(6)">Activo</th>
+                        <th scope="col">Editar</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable" th:each="prestamo : ${prestamos}">
+                    <tr class="bg-gradient shadow-lg" style="background-color: rgb(255, 207, 49);">
+                        <!--th scope="row" th:text=${libro.id}></th-->
+                        <td th:text="${prestamo.id}"></td>
+                        <td th:text="${prestamo.libro.titulo}"></td>
+                        <td th:text="${prestamo.cliente.getNombreCompleto()}"></td>
+                        <td th:text="${prestamo.cliente.documento}"></td>
+                        <td th:text="${#dates.format(prestamo.fechaPrestamo, 'dd-MMM-yyyy')}"></td>
+                        <!-- <td th:text="${{prestamo.fechaDevolucion}}"></td> -->
+                        <td th:text="${#dates.format(prestamo.fechaDevolucion, 'dd-MMM-yyyy')}"></td>
+                        <td>
+                            <i class="bi  bg-gradient" th:classappend="${prestamo.alta}? 'bi-check-lg btn btn-success':'bi-x-lg btn btn-danger disabled'" style="font-size: 1.5rem;"></i>
+                        </td>
+                        <td>
+                            <a th:href="@{/prestamo/devolver/__${prestamo.id}__}" class="btn btn-lg btn-outline-primary bg-gradient shadow" th:classappend="!${prestamo.alta}?'disabled'">DEVOLVER</a>
+                            <a th:href="@{/prestamo/modificar/__${prestamo.id}__?step=3}" title="Modificar" class="btn btn-outline-primary bg-gradient">
+                                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <footer th:replace="template :: footer"></footer>
+    <div th:replace="template :: scripts"></div>
+</body>
+
+</html>

@@ -1,0 +1,342 @@
+<html>
+
+<head th:fragment="head">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--Iconos link-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <!-- Scripts necesario para ejecutar el de modal-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!--Buscar en listado de opciones (autores y editoriales)-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- OR param.step[0] == '1' OR param.step[0] == '2' -->
+    <style th:fragment="fondotabla" th:if="${#strings.contains(accion,'Listado') OR #strings.contains(accion,'registro de Préstamo')}">
+        body {
+            background-image: linear-gradient(to right, #0acffe 0%, #495aff 100%) !important;
+        }
+    </style>
+
+    <style th:fragment="fondoregistro" th:if="${#strings.contains(accion,'Registro') OR #strings.contains(accion,'Modificar')}">
+        body {
+            background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(251, 221, 19, 1) 0.1%, rgba(255, 153, 1, 1) 90%) !important;
+        }
+    </style>
+
+    <!--Animacion web fade-->
+    <style th:if="${exito}==null AND ${error}==null">
+        body {
+            animation: fadeInAnimation ease 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient h4 pt-5">
+        <!--fixed-top-->
+        <div class="container-fluid d-flex justify-content-center">
+            <button class="navbar-toggler bg-gradient shadow-lg" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                <!-- <a class="navbar-brand" href="/">Librería EGG</a> -->
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <a class="navbar-brand" href="/"><img th:src="@{/logo.png}" alt="logo" width="100"></a>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">HOME</a>
+                    </li> -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:classappend="${#httpServletRequest.requestURI.contains('autor')} ? 'active'" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            AUTORES
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/autor/registro">Registro de autor</a></li>
+                            <li><a class="dropdown-item" href="/autor/lista">Lista de autores</a></li>
+                            <li><a class="dropdown-item" href="/autor/modificar">Modificar autor</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:classappend="${#httpServletRequest.requestURI.contains('editorial')} ? 'active'" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            EDITORIALES
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/editorial/registro">Registro de editorial</a></li>
+                            <li><a class="dropdown-item" href="/editorial/lista">Lista de editoriales</a></li>
+                            <li><a class="dropdown-item" href="/editorial/modificar">Modificar editorial</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:classappend="${#httpServletRequest.requestURI.contains('libro')} ? 'active'" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            LIBROS
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/libro/registro">Registro de libro</a></li>
+                            <li><a class="dropdown-item" href="/libro/lista">Lista de libros</a></li>
+                            <li><a class="dropdown-item" href="/libro/modificar">Modificar libro</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:classappend="${#httpServletRequest.requestURI.contains('cliente')} ? 'active'" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            CLIENTES
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/cliente/registro">Registro de cliente</a></li>
+                            <li><a class="dropdown-item" href="/cliente/lista">Lista de clientes</a></li>
+                            <li><a class="dropdown-item" href="/cliente/modificar">Modificar cliente</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:classappend="${#httpServletRequest.requestURI.contains('prestamo')} ? 'active'" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            PRESTAMOS
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/prestamo/registro?step=1">Registro de préstamo</a></li>
+                            <li><a class="dropdown-item" href="/prestamo/lista">Lista, Devolución y Modificación</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-dark py-4">
+    <!-- Container wrapper -->
+    <div class="container-fluid">
+        <!-- Toggle button -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarCenteredExample"
+                aria-controls="navbarCenteredExample"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <!-- Collapsible wrapper -->
+        <div
+             class="collapse navbar-collapse justify-content-center"
+             id="navbarCenteredExample">
+            <!-- Left links -->
+            <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <li class="nav-item">
+                    <a class="navbar-brand" href="/"><img th:src="@{/logo.png}" alt="logo" width="90"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold text-uppercase" th:classappend="${#httpServletRequest.requestURI.contains('libro')} ? 'active'" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Libros</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/libro/registro">Registro de libro</a></li>
+                        <li><a class="dropdown-item" href="/libro/lista">Lista de libros</a></li>
+                        <li><a class="dropdown-item" href="/libro/modificar">Modificar libro</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold text-uppercase" th:classappend="${#httpServletRequest.requestURI.contains('autor')} ? 'active'" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Autores</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/autor/registro">Registro de autor</a></li>
+                        <li><a class="dropdown-item" href="/autor/lista">Lista de autores</a></li>
+                        <li><a class="dropdown-item" href="/autor/modificar">Modificar autor</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold text-uppercase" th:classappend="${#httpServletRequest.requestURI.contains('editorial')} ? 'active'" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Editoriales</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/editorial/registro">Registro de editorial</a></li>
+                        <li><a class="dropdown-item" href="/editorial/lista">Lista de editoriales</a></li>
+                        <li><a class="dropdown-item" href="/editorial/modificar">Modificar editorial</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold text-uppercase" th:classappend="${#httpServletRequest.requestURI.contains('cliente')} ? 'active'" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clientes</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/cliente/registro">Registro de cliente</a></li>
+                        <li><a class="dropdown-item" href="/cliente/lista">Lista de clientes</a></li>
+                        <li><a class="dropdown-item" href="/cliente/modificar">Modificar cliente</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold text-uppercase" th:classappend="${#httpServletRequest.requestURI.contains('prestamo')} ? 'active'" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Prestamos</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/prestamo/registro">Registro de préstamo</a></li>
+                        <li><a class="dropdown-item" href="/prestamo/lista">Lista de préstamos</a></li>
+                        <li><a class="dropdown-item" href="/prestamo/modificar">Modificar préstamo</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- Left links -->
+        </div>
+        <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+</nav>
+
+<div th:fragment="search">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 text-white" th:text="${accion}">
+            </h3>
+    </div>
+
+    <!-- Input buscar -->
+    <div class="form-floating d-flex justify-content-center my-5">
+        <input type="text" id="myInput" class="form-control shadow" placeholder=" " title="Nombre del Autor">
+        <label>Buscar</label>
+    </div>
+</div>
+
+<footer th:fragment="footer">
+    <div class="pt-5 p-5 text-white text-center position-relative">
+        <div class="container">
+            <p class="lead font-weight-bold">Copyright &copy; 2021</p>
+            <a href="#" class="position-absolute bottom-0 end-0 pb-5">
+                <i class="bi bi-arrow-up-circle h1 text-white"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<div th:fragment="scripts">
+    <!--Buscar en listado de opciones (autores y editoriales)-->
+    <script>$(document).ready(function () {
+            $('.buscar-lista').select2();
+        });</script>
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exitoError" tabindex="-1" role="dialog">
+        <div class="d-flex modal-dialog modal-dialog-centered justify-content-center" role="document">
+            <div class="rounded-3 alert alert-dismissible text-white shadow-lg" th:classappend="${exito}? 'bg-success' : 'bg-danger'">
+                <i class="bi d-flex justify-content-center mt-3" th:classappend="${exito} ? 'bi-check2-circle':'bi bi-x-circle'" style="font-size: 10rem;"></i>
+                <div class="mb-4 mx-4">
+                    <br>
+                    <h1 th:text="${exito} ? 'EXITO!' : 'ERROR!'"></h1>
+                    <!--th:text="|Exito! ${exito}|"-->
+                    <h1 class="lead" th:text="${exito}? ${exito} : ${error}"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- (Modal) Mostrar exito o error-->
+    <script th:if="${exito}!=null OR ${error}!=null">
+        $(function () {
+            $("#exitoError").modal('show');
+            setTimeout(function () {
+                $("#exitoError").modal('hide');
+            }, 2500);
+        });
+    </script>
+
+    <!--Hover Dropdown-->
+    <script>
+        const $dropdown = $(".dropdown");
+        const $dropdownToggle = $(".dropdown-toggle");
+        const $dropdownMenu = $(".dropdown-menu");
+        const showClass = "show";
+
+        $(window).on("load resize", function () {
+            if (this.matchMedia("(min-width: 768px)").matches) {
+                $dropdown.hover(
+                    function () {
+                        const $this = $(this);
+                        $this.addClass(showClass);
+                        $this.find($dropdownToggle).attr("aria-expanded", "true");
+                        $this.find($dropdownMenu).addClass(showClass);
+                    },
+                    function () {
+                        const $this = $(this);
+                        $this.removeClass(showClass);
+                        $this.find($dropdownToggle).attr("aria-expanded", "false");
+                        $this.find($dropdownMenu).removeClass(showClass);
+                    }
+                );
+            } else {
+                $dropdown.off("mouseenter mouseleave");
+            }
+        });
+    </script>
+
+    <!-- Buscar en tabla-->
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <!-- Ordenar tabla -->
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+
+            table = document.getElementById("ordenarTabla");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    var cmpX = isNaN(parseInt(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
+                    var cmpY = isNaN(parseInt(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+                    cmpX = (cmpX == '-') ? 0 : cmpX;
+                    cmpY = (cmpY == '-') ? 0 : cmpY;
+                    if (dir == "asc") {
+                        if (cmpX > cmpY) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (cmpX < cmpY) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
+</html>
